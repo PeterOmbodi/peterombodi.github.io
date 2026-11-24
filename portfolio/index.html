@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mobile, Android, Flutter and open-source project catalog of Peter Ombodi">
+  <title>Peter Ombodi Projects</title>
+  <style>
+    :root {
+      --ink: #17201f;
+      --muted: #65706d;
+      --paper: #f4f1ea;
+      --card: #fffdf8;
+      --line: #d8d3c8;
+      --accent: #0d6b5d;
+      --accent-2: #e55d37;
+      --soft: #dcebe5;
+      --shadow: 0 18px 44px rgba(34, 48, 44, .09);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 4%, rgba(229, 93, 55, .13), transparent 24rem),
+        radial-gradient(circle at 94% 14%, rgba(13, 107, 93, .12), transparent 28rem),
+        var(--paper);
+      font: 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    .wrap { width: min(1180px, calc(100% - 36px)); margin: 0 auto; }
+    .hero { padding: 64px 0 32px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--accent); font-size: 13px; font-weight: 800;
+      letter-spacing: .11em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: currentColor; }
+    h1 {
+      margin: 18px 0 16px;
+      max-width: 870px;
+      font: 800 clamp(42px, 7vw, 82px)/.98 Georgia, "Times New Roman", serif;
+      letter-spacing: -.045em;
+    }
+    .lede { max-width: 760px; margin: 0; color: var(--muted); font-size: clamp(18px, 2vw, 22px); }
+    .hero-row { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-top: 30px; }
+    .profile-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .profile-links a, .jump {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px;
+      background: rgba(255,255,255,.55); text-decoration: none; font-weight: 700; font-size: 14px;
+    }
+    .profile-links a:hover, .jump:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .lang-switch { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.55); }
+    .lang-button { border: 0; border-radius: 999px; padding: 7px 11px; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 850; }
+    .lang-button[aria-pressed="true"] { background: var(--ink); color: white; }
+    .stats {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px; margin: 34px 0 0; border: 1px solid var(--line); border-radius: 18px;
+      overflow: hidden; background: var(--line); box-shadow: var(--shadow);
+    }
+    .stat { background: rgba(255,253,248,.92); padding: 18px 20px; }
+    .stat strong { display: block; font: 800 30px/1 Georgia, serif; }
+    .stat span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; padding: 14px 0;
+      background: rgba(244,241,234,.9); border-top: 1px solid rgba(216,211,200,.6);
+      border-bottom: 1px solid rgba(216,211,200,.9); backdrop-filter: blur(16px);
+    }
+    .toolbar-inner { display: grid; grid-template-columns: minmax(250px, 1fr) 2fr; gap: 16px; align-items: center; }
+    .search {
+      width: 100%; border: 1px solid var(--line); border-radius: 13px; padding: 11px 14px;
+      background: var(--card); color: var(--ink); outline: none;
+    }
+    .search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13,107,93,.12); }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .filter {
+      border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px;
+      background: transparent; color: var(--muted); cursor: pointer; font-weight: 750; font-size: 13px;
+    }
+    .filter:hover, .filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: white; }
+    main { padding: 34px 0 72px; }
+    .results-line { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 18px; }
+    .results-line h2 { margin: 0; font: 800 27px/1.1 Georgia, serif; }
+    #resultCount { color: var(--muted); font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .card {
+      display: flex; flex-direction: column; min-height: 100%;
+      padding: 24px; border: 1px solid var(--line); border-radius: 20px;
+      background: var(--card); box-shadow: 0 6px 20px rgba(37,48,45,.045);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .card:hover { transform: translateY(-2px); border-color: #b9b4aa; box-shadow: var(--shadow); }
+    .card-top { display: flex; justify-content: space-between; gap: 14px; align-items: start; }
+    .number { color: var(--accent-2); font: 800 13px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; }
+    .kind { color: var(--accent); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; text-align: right; }
+    .card h3 { margin: 14px 0 7px; font: 800 27px/1.1 Georgia, serif; letter-spacing: -.015em; }
+    .aliases { margin: 0 0 13px; color: var(--muted); font-size: 12px; }
+    .description { margin: 0; color: #3f4947; }
+    .stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 22px; }
+    .tag { border-radius: 999px; background: var(--soft); color: #244b44; padding: 5px 9px; font-size: 12px; font-weight: 750; }
+    .links { margin-top: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .link {
+      display: flex; flex-direction: column; justify-content: center; min-height: 58px;
+      border: 1px solid var(--line); border-radius: 12px; padding: 9px 10px;
+      text-decoration: none; background: #fff; overflow-wrap: anywhere;
+    }
+    .link span { color: var(--muted); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .link strong { margin-top: 3px; font-size: 12px; line-height: 1.25; }
+    a.link:hover { border-color: var(--accent); color: var(--accent); }
+    .extras { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+    .extra { color: var(--accent); font-size: 12px; font-weight: 800; text-decoration: none; }
+    .extra:hover { text-decoration: underline; }
+    .empty { display: none; border: 1px dashed var(--line); border-radius: 18px; padding: 42px; text-align: center; color: var(--muted); }
+    .noscript { margin: 20px 0; padding: 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); }
+    @media (max-width: 850px) {
+      .hero { padding-top: 42px; }
+      .hero-row { align-items: start; flex-direction: column; }
+      .toolbar-inner { grid-template-columns: 1fr; }
+      .filters { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+      .grid { grid-template-columns: 1fr; }
+      .toolbar { position: static; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 24px, 1180px); }
+      .stats { grid-template-columns: 1fr; }
+      .links { grid-template-columns: 1fr; }
+      .card { padding: 20px; }
+      h1 { font-size: 46px; }
+    }
+    @media print {
+      body { background: white; }
+      .toolbar { display: none; }
+      .wrap { width: 100%; }
+      .hero { padding: 20px 0; }
+      .grid { gap: 10px; }
+      .card { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow" id="eyebrow">Mobile engineering portfolio</div>
+      <h1 id="pageTitle">Peter Ombodi Projects</h1>
+      <p class="lede" id="lede">Selected Android, Flutter and open-source projects by Peter Ombodi.</p>
+      <div class="hero-row">
+        <nav class="profile-links" aria-label="Профили">
+          <a href="https://github.com/PeterOmbodi" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a href="https://www.linkedin.com/in/peter-ombodi/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+          <a href="mailto:p.ombodi@gmail.com">Email</a>
+        </nav>
+        <div class="hero-actions">
+          <div class="lang-switch" role="group" aria-label="Language">
+            <button class="lang-button" type="button" data-lang="en" aria-pressed="true">EN</button>
+            <button class="lang-button" type="button" data-lang="uk" aria-pressed="false">UA</button>
+          </div>
+          <a class="jump" id="jumpLink" href="#catalog">View projects ↓</a>
+        </div>
+      </div>
+      <section class="stats" aria-label="Сводка">
+        <div class="stat"><strong id="projectTotal">22</strong><span id="statProjects">projects and product families</span></div>
+        <div class="stat"><strong>10+</strong><span id="statYears">years in commercial mobile development</span></div>
+        <div class="stat"><strong>Android · Flutter</strong><span id="statPlatforms">core platforms</span></div>
+      </section>
+    </div>
+  </header>
+
+  <section class="toolbar" aria-label="Поиск и фильтры">
+    <div class="wrap toolbar-inner">
+      <input id="search" class="search" type="search" placeholder="Search projects, descriptions or stack…" aria-label="Search projects">
+      <div class="filters" id="filters" role="group" aria-label="Filter by type">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter" type="button" data-filter="commercial" aria-pressed="false">Commercial</button>
+        <button class="filter" type="button" data-filter="personal" aria-pressed="false">Personal</button>
+        <button class="filter" type="button" data-filter="opensource" aria-pressed="false">Open source</button>
+      </div>
+    </div>
+  </section>
+
+  <main id="catalog" class="wrap">
+    <div class="results-line">
+      <h2 id="catalogTitle">Project catalog</h2>
+      <span id="resultCount" aria-live="polite"></span>
+    </div>
+    <noscript><div class="noscript">Enable JavaScript to view the project cards.</div></noscript>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty">No projects found. Try another search or reset the filter.</div>
+
+  </main>
+
+
+  <script>
+    const projects = [
+      {
+        name: "Immich", type: "opensource", kind: "Open-source contributor",
+        description: "Контрибьюции в крупную self-hosted платформу: Android media sync, gallery integration, lifecycle/asset handling, загрузки, intent flows и устранение Flutter/Riverpod memory leak.",
+        stack: ["Flutter", "Dart", "Kotlin", "Riverpod", "Android", "MediaStore", "Dart DevTools", "Performance profiling"],
+        links: { github: "https://github.com/immich-app/immich/pulls?q=is%3Apr+author%3APeterOmbodi" },
+        extras: [
+          ["PR #32100 · Timeline memory leak", "https://github.com/immich-app/immich/pull/32100"],
+          ["PR #28833 · Android ACTION_VIEW", "https://github.com/immich-app/immich/pull/28833"],
+          ["PR #23992 · Trash Sync Review", "https://github.com/immich-app/immich/pull/23992"]
+        ]
+      },
+      {
+        name: "Caesar Puzzle Calendar", type: "personal", categories: ["opensource"], kind: "Personal · Open source · Puzzle",
+        description: "Кроссплатформенная головоломка для Android, iOS, Web и desktop: интерактивные фигуры, custom painting, undo/redo, локальное хранение и DLX-решатель.",
+        stack: ["Flutter", "Dart", "BLoC/Cubit", "Clean Architecture", "DDD", "Freezed", "GetIt", "CustomPainter", "DLX"],
+        links: { play: "https://play.google.com/store/apps/details?id=com.peter_ombodi.caesar_puzzle", github: "https://github.com/PeterOmbodi/caesar-s_calendar" },
+        extras: [["Web-версия", "https://peterombodi.github.io/caesar-s_calendar/"]]
+      },
+      {
+        name: "SAS Gamification", aliases: "Модуль внутри приложения SAS", type: "commercial", kind: "Коммерческий · Airline",
+        description: "Игровой модуль для авиационного приложения с более чем миллионом загрузок: локализация, сохранение прогресса, state management и автоматизированные тесты.",
+        stack: ["Flutter", "Dart", "Flame", "BLoC", "GetIt", "Injectable", "SharedPreferences", "Flutter Test"],
+        links: { appstore: "https://apps.apple.com/us/app/sas-scandinavian-airlines/id605727126", play: "https://play.google.com/store/apps/details?id=se.sas.android", github: "https://github.com/PeterOmbodi/clouds_breaker" }
+      },
+      {
+        name: "2020 Armor / Century", type: "commercial", kind: "Коммерческий · Connected fitness",
+        description: "Нативный Android-продукт для BLE-подключенного тренировочного оборудования. Полная самостоятельная разработка: архитектура, real-time BLE, OTA/DFU, медиа, профили, игры, рейтинги и поэтапные сборки.",
+        stack: ["Kotlin", "Jetpack Compose", "MVVM", "Hilt", "Coroutines", "Flow", "BLE", "OTA/DFU", "Firebase", "Room", "Paging 3"],
+        links: { play: "https://play.google.com/store/apps/details?id=com.century2020.app" }
+      },
+      {
+        name: "BLE Positioning", type: "commercial", kind: "Коммерческий · Indoor positioning",
+        description: "Android-приложение для позиционирования в помещении по Eddystone-маякам: сканирование, калибровка, сглаживание расстояний, взвешенная трилатерация и визуализация позиции на плане.",
+        stack: ["Kotlin", "Jetpack Compose", "Bluetooth LE", "AltBeacon", "Coroutines", "StateFlow", "MVVM"],
+        links: { github: "https://github.com/PeterOmbodi/eddystone_blepositioning.git" }
+      },
+      {
+        name: "Kempinski@Work", type: "commercial", kind: "Коммерческий · Hospitality",
+        description: "Приложение для сотрудников отелей: защищённые чаты и вложения, уведомления, скидки, booking-функции и OKTA-аутентификация. Более двух лет полной ответственности за Android/iOS-версию.",
+        stack: ["Flutter", "Dart", "BLoC", "RxDart", "Stream Chat", "OKTA", "REST", "Firebase", "Hive", "Secure Storage", "Kotlin", "Swift"],
+        links: { appstore: "https://apps.apple.com/us/app/kempinski-work-app/id1572473240", play: "https://play.google.com/store/apps/details?id=com.kempinski.employeeapp" }
+      },
+      {
+        name: "GHA / Global Hotel Alliance", aliases: "Pan Pacific DISCOVERY · Kempinski Hotels", type: "commercial", kind: "Коммерческий · Travel & hospitality",
+        description: "Клиентское приложение программы DISCOVERY: поиск и бронирование отелей, управление резервациями, mobile check-in, активности, карты и геолокация.",
+        stack: ["Flutter", "Dart", "BLoC", "GraphQL", "REST", "Dio", "Firebase Analytics", "Firebase Messaging", "Google Maps"],
+        links: { appstore: "https://apps.apple.com/us/app/gha-discovery/id1085676331", play: "https://play.google.com/store/apps/details?id=com.pan_pacific.hotels&hl=uk" },
+        extras: [
+          ["Google Play: Kempinski Hotels", "https://play.google.com/store/apps/details?id=com.kempinski.hotels&hl=uk"],
+          ["App Store: Kempinski Hotels", "https://apps.apple.com/us/app/kempinski-hotels/id1198602633"]
+        ]
+      },
+      {
+        name: "Uniper", type: "commercial", kind: "Коммерческий · Health & social",
+        description: "Платформа ухода и социального общения для пожилых пользователей. Реализованы Android TV-видеовстречи до 100 участников, видео-контент, REST/Firebase и device-specific исправления.",
+        stack: ["Kotlin", "Android TV", "Flutter", "Zoom SDK", "Agora", "Redux", "REST", "Firebase", "SQLite", "Mixpanel"],
+        links: { appstore: "https://apps.apple.com/us/app/uniper-app/id1529787818", play: "https://play.google.com/store/apps/details?id=com.uniper.uniapp&hl=uk" }
+      },
+      {
+        name: "i3 Engineering", type: "commercial", kind: "Коммерческий · Smart home",
+        description: "Управление умным домом: Bluetooth-подключение и настройка устройств, автоматизация, аналитика, сложный анимированный UI и нативная Android-интеграция через platform channels.",
+        stack: ["Flutter", "Dart", "Kotlin", "BLoC", "Bluetooth", "Platform Channels", "REST", "Protobuf", "Drift", "SQLite", "Firebase"],
+        links: { appstore: "https://apps.apple.com/us/app/i3-home/id1562859755", play: "https://play.google.com/store/apps/details?id=com.i3engineering.home" }
+      },
+      {
+        name: "PrestoSports", type: "commercial", kind: "Коммерческий · Sports media",
+        description: "Спортивное приложение для видеостриминга. Реализованы playback/streaming-сценарии, REST-интеграция, повышение стабильности и доработка собственного форка video_player.",
+        stack: ["Flutter", "Dart", "GetX", "Dio", "REST", "Firebase Crashlytics", "video_player"],
+        links: { play: "https://play.google.com/store/search?q=PrestoSports&c=apps" }, playSearch: true, extras: [["Сайт продукта", "https://www.prestosports.com/"]]
+      },
+      {
+        name: "SGS Chat / SGS Posts / Post+Chat", type: "commercial", kind: "Коммерческий · Communication",
+        description: "Набор функций для публикаций духовного наставника и общения с пользователями: аутентификация, лента публикаций, чат в реальном времени, вложения, медиа и offline/local storage.",
+        stack: ["Flutter", "Dart", "Redux", "Provider", "Firebase Auth", "Firebase Database", "Moor", "Dio", "Audio/Video"],
+        links: {}
+      },
+      {
+        name: "Workload", type: "commercial", kind: "Коммерческий · Workforce management",
+        description: "Управление проектами и персоналом, учёт рабочего времени и отпусков для руководителей и сотрудников; разработан кастомный календарь.",
+        stack: ["Flutter", "Dart", "Redux", "Firebase Database", "FCM", "Dio", "Custom Calendar", "Crashlytics"],
+        links: { play: "https://play.google.com/store/apps/details?id=com.pettersonapps.wl" }
+      },
+      {
+        name: "SpotOn", aliases: "Buttik — административное приложение", type: "commercial", kind: "Коммерческий · Marketplace",
+        description: "Два Android-приложения с нуля: покупательское для поиска продуктов со скидкой и административное для управления магазином, товарами и скидками.",
+        stack: ["Java", "Android", "MVP", "RxJava 2", "REST", "Firebase FCM", "Google Location", "Picasso", "AndroidAnnotations"],
+        links: {}
+      },
+      {
+        name: "QO", type: "commercial", kind: "Коммерческий · Hospitality",
+        description: "Приложение для гостей отеля: события и гид по городу, погода, выбор номера, карты, геолокация и кастомный интерфейс аренды электровелосипедов.",
+        stack: ["Java", "Android", "MVP", "RxJava 2", "Dagger 2", "Google Maps", "Google Location", "Glide"],
+        links: {}
+      },
+      {
+        name: "UMMADUM", type: "commercial", kind: "Коммерческий · Mobility",
+        description: "Платформа совместных поездок для уменьшения использования личных автомобилей: маршруты, поиск попутчиков и кастомные карты для водителя и пассажира.",
+        stack: ["Java", "Android", "MVP", "Google Maps", "Google Places", "Retrofit 2", "RxJava 2", "Firebase FCM"],
+        links: { play: "https://play.google.com/store/apps/details?id=com.ummadum.app.production&gl=AT" }
+      },
+      {
+        name: "Teamicate", type: "commercial", kind: "Коммерческий · Scheduling",
+        description: "Планирование совместных активностей: поиск общего свободного времени по календарям, голосование за удобное время и плавный календарный интерфейс.",
+        stack: ["Java", "Android", "MVP", "Google Calendar", "Google Places", "Retrofit 2", "RxJava 2", "Room", "Facebook SDK"],
+        links: {}
+      },
+      {
+        name: "Move For Less", type: "commercial", kind: "Коммерческий · Logistics",
+        description: "Логистическое Android-приложение: заказы на переезд, фоновое отслеживание, маршруты и карты, документы PDF, offline-режим и платежи PayPal.",
+        stack: ["Java", "Android", "RxJava", "Google Maps", "Location", "Retrofit", "DBFlow", "PayPal SDK", "PDFium"],
+        links: {}, extras: [
+          ["Страница проекта", "https://thinkmobiles.com/projects/move-for-less/"],
+          ["Интерактивный mockup", "https://marvelapp.com/1a1a73j/screen/8043352"],
+          
+        ]
+      },
+      {
+        name: "Bumerang", type: "commercial", kind: "Коммерческий · Booking marketplace",
+        description: "MVP-приложение для продажи и бронирования мест в зоне отдыха.",
+        stack: ["Java", "Android", "MVP", "RxJava 2", "RxPermissions 2", "Room", "AndroidAnnotations", "Stetho"],
+        links: {}
+      },
+      {
+        name: "eYes Front", type: "personal", kind: "Личный · Restaurant operations",
+        description: "Front-office система для ресторанов и кафе: Android-клиент и PHP/MySQL backend, работа с заказами, оплатой, печатью счетов и результатами смены.",
+        stack: ["Java", "Android", "PHP", "MySQL", "phpMyAdmin", "RxJava 2", "Retrofit 2", "Stetho"],
+        links: { play: "https://play.google.com/store/apps/details?id=ua.peter_ombodi.eYesFront" }
+      },
+      {
+        name: "Converter Lab", type: "personal", kind: "Учебный · Finance",
+        description: "Дипломное Android-приложение для просмотра, поиска и сравнения валютных курсов и информации о банках.",
+        stack: ["Java", "Android", "MVP", "Retrofit 2", "Google Places", "Google Maps", "Firebase JobDispatcher"],
+        links: { github: "https://github.com/PeterOmbodi/newConverterLab" },
+        extras: [["Предыдущий репозиторий", "https://github.com/PeterOmbodi/ConverterLab"]]
+      },
+      {
+        name: "flutter_flip_flap", type: "opensource", kind: "Open source · Flutter package",
+        description: "Переиспользуемый Flutter-пакет для flip/flap-анимаций в стиле механических split-flap дисплеев: публичный API, orchestration, настраиваемые элементы и примеры.",
+        stack: ["Flutter", "Dart", "Animation", "Package API", "Documentation", "Semantic versioning"],
+        links: { github: "https://github.com/PeterOmbodi/flutter_flip_flap" },
+        extras: [["pub.dev", "https://pub.dev/packages/flutter_flip_flap"]]
+      },
+      {
+        name: "exact_cover_dlx", type: "opensource", kind: "Open source · Dart package",
+        description: "Dart-пакет с реализацией алгоритма Dancing Links Дональда Кнута для быстрого поиска и перечисления решений exact-cover задач; используется в Caesar Puzzle Calendar.",
+        stack: ["Dart", "Algorithm X", "Dancing Links", "Reusable API", "Performance"],
+        links: { github: "https://github.com/PeterOmbodi/caesar-s_calendar/tree/master/packages/exact_cover_dlx" }, extras: [["pub.dev", "https://pub.dev/packages/exact_cover_dlx"]]
+      }
+    ];
+
+    const projectI18n = {
+      "2020 Armor / Century": {
+        en: { kind: "Commercial · Connected fitness", description: "A native Android product for BLE-connected training equipment. Sole end-to-end ownership covering architecture, real-time BLE, OTA/DFU, media, profiles, games, leaderboards and staged builds." },
+        uk: { kind: "Комерційний · Connected fitness", description: "Нативний Android-продукт для тренувального обладнання з BLE-підключенням. Повна самостійна розробка: архітектура, real-time BLE, OTA/DFU, медіа, профілі, ігри, рейтинги та поетапні збірки." }
+      },
+      "BLE Positioning": {
+        en: { kind: "Commercial · Indoor positioning", description: "An Android indoor-positioning application based on Eddystone beacons: scanning, calibration, distance smoothing, weighted trilateration and real-time position visualization on a floor plan." },
+        uk: { kind: "Комерційний · Indoor positioning", description: "Android-застосунок для позиціонування в приміщенні за маяками Eddystone: сканування, калібрування, згладжування відстаней, зважена трилатерація та візуалізація позиції на плані." }
+      },
+      "Kempinski@Work": {
+        en: { kind: "Commercial · Hospitality", description: "An employee application for hotel staff with encrypted chat and attachments, notifications, discounts, booking features and OKTA authentication. More than two years of sole ownership across Android and iOS." },
+        uk: { kind: "Комерційний · Hospitality", description: "Застосунок для працівників готелів: захищені чати й вкладення, сповіщення, знижки, функції бронювання та автентифікація OKTA. Понад два роки повної відповідальності за Android/iOS-версію." }
+      },
+      "GHA / Global Hotel Alliance": {
+        en: { kind: "Commercial · Travel & hospitality", aliases: "Pan Pacific DISCOVERY · Kempinski Hotels", description: "A consumer application for DISCOVERY loyalty members with hotel search and booking, reservation management, mobile check-in, activities, maps and geolocation." },
+        uk: { kind: "Комерційний · Travel & hospitality", aliases: "Pan Pacific DISCOVERY · Kempinski Hotels", description: "Клієнтський застосунок програми DISCOVERY: пошук і бронювання готелів, керування резерваціями, mobile check-in, активності, мапи та геолокація." }
+      },
+      "SAS Gamification": {
+        en: { kind: "Commercial · Airline", aliases: "A module inside the SAS application", description: "A game module for an airline application with more than one million downloads, including localization, progress persistence, state management and automated tests." },
+        uk: { kind: "Комерційний · Airline", aliases: "Модуль у застосунку SAS", description: "Ігровий модуль для авіаційного застосунку з понад мільйоном завантажень: локалізація, збереження прогресу, state management та автоматизовані тести." }
+      },
+      "Uniper": {
+        en: { kind: "Commercial · Health & social", description: "A care-delivery and social-engagement platform for older adults. Implemented Android TV video meetings for up to 100 participants, video content, REST/Firebase integrations and device-specific fixes." },
+        uk: { kind: "Комерційний · Health & social", description: "Платформа догляду та соціального спілкування для людей старшого віку. Реалізовано Android TV-відеозустрічі до 100 учасників, відеоконтент, REST/Firebase та виправлення для окремих пристроїв." }
+      },
+      "i3 Engineering": {
+        en: { kind: "Commercial · Smart home", description: "Smart-home control with Bluetooth device discovery and setup, automation, analytics, a complex animated UI and native Android integration through platform channels." },
+        uk: { kind: "Комерційний · Smart home", description: "Керування розумним будинком: Bluetooth-підключення й налаштування пристроїв, автоматизація, аналітика, складний анімований UI та нативна Android-інтеграція через platform channels." }
+      },
+      "PrestoSports": {
+        en: { kind: "Commercial · Sports media", aliases: "White-label applications", description: "White-label sports video-streaming applications. Implemented playback and streaming flows, REST integration, runtime stability improvements and enhancements to a custom video_player fork." },
+        uk: { kind: "Комерційний · Sports media", aliases: "Застосунки під брендами замовників (white label)", description: "Спортивні застосунки для відеостримінгу під брендами замовників. Реалізовано playback/streaming-сценарії, REST-інтеграцію, покращення стабільності та доопрацювання власного форку video_player." }
+      },
+      "SGS Chat / SGS Posts / Post+Chat": {
+        en: { kind: "Commercial · Communication", aliases: "Separate and combined names appear across CV versions", description: "A product family for spiritual-mentor posts and user communication: authentication, post feed, real-time chat, attachments, media and offline/local storage." },
+        uk: { kind: "Комерційний · Communication", description: "Набір функцій для публікацій духовного наставника та спілкування з користувачами: автентифікація, стрічка дописів, чат у реальному часі, вкладення, медіа й offline/local storage." }
+      },
+      "Workload": {
+        en: { kind: "Commercial · Workforce management", description: "Project and personnel management, working-time and vacation tracking for managers and employees, including a custom calendar." },
+        uk: { kind: "Комерційний · Workforce management", description: "Керування проєктами й персоналом, облік робочого часу та відпусток для керівників і працівників; розроблено кастомний календар." }
+      },
+      "SpotOn": {
+        en: { kind: "Commercial · Marketplace", aliases: "Buttik is the administrator application", description: "Two Android applications built from scratch: a customer app for finding discounted groceries and an administrator app for managing stores, products and discounts." },
+        uk: { kind: "Комерційний · Marketplace", aliases: "Buttik — адміністративний застосунок", description: "Два Android-застосунки з нуля: клієнтський для пошуку продуктів зі знижкою та адміністративний для керування магазином, товарами й знижками." }
+      },
+      "QO": {
+        en: { kind: "Commercial · Hospitality", description: "A hotel guest application with city events, a guide, weather, room selection, maps, geolocation and a custom electric-bicycle rental interface." },
+        uk: { kind: "Комерційний · Hospitality", description: "Застосунок для гостей готелю: події та гід містом, погода, вибір номера, мапи, геолокація й кастомний інтерфейс оренди електровелосипедів." }
+      },
+      "UMMADUM": {
+        en: { kind: "Commercial · Mobility", description: "A shared-mobility platform designed to reduce private-car use, with routes, ride matching and custom map interfaces for drivers and riders." },
+        uk: { kind: "Комерційний · Mobility", description: "Платформа спільних поїздок для зменшення використання приватних автомобілів: маршрути, пошук попутників і кастомні мапи для водія та пасажира." }
+      },
+      "Teamicate": {
+        en: { kind: "Commercial · Scheduling", description: "Planning shared activities by finding mutual free time in calendars, voting on suitable times and using a smooth custom scheduling interface." },
+        uk: { kind: "Комерційний · Scheduling", description: "Планування спільних активностей: пошук спільного вільного часу за календарями, голосування за зручний час і плавний календарний інтерфейс." }
+      },
+      "Move For Less": {
+        en: { kind: "Commercial · Logistics", description: "A logistics Android application for moving-service orders, background tracking, routes and maps, PDF documents, offline work and PayPal payments." },
+        uk: { kind: "Комерційний · Logistics", description: "Логістичний Android-застосунок: замовлення на переїзд, фонове відстеження, маршрути й мапи, PDF-документи, offline-режим і платежі PayPal." }
+      },
+      "Bumerang": {
+        en: { kind: "Commercial · Booking marketplace", description: "An MVP application for selling and booking places in a recreation area." },
+        uk: { kind: "Комерційний · Booking marketplace", description: "MVP-застосунок для продажу та бронювання місць у зоні відпочинку." }
+      },
+      "eYes Front": {
+        en: { kind: "Personal · Restaurant operations", description: "A front-office system for restaurants and cafés with an Android client and PHP/MySQL backend, covering orders, payments, receipt printing and shift results." },
+        uk: { kind: "Особистий · Restaurant operations", description: "Front-office система для ресторанів і кафе: Android-клієнт і PHP/MySQL backend, робота із замовленнями, оплатою, друком рахунків і результатами зміни." }
+      },
+      "Converter Lab": {
+        en: { kind: "Educational · Finance", description: "A graduation Android application for viewing, searching and comparing exchange rates and bank information." },
+        uk: { kind: "Навчальний · Finance", description: "Дипломний Android-застосунок для перегляду, пошуку й порівняння валютних курсів та інформації про банки." }
+      },
+      "Immich": {
+        en: { kind: "Open-source contributor", description: "Fixed a Flutter/Riverpod memory leak in the timeline, worked on opening media from Android ACTION_VIEW intents, and built a review flow for trash and restore changes that are out of sync." },
+        uk: { kind: "Учасник open-source проєкту", description: "Виправив витік пам’яті у стрічці Flutter/Riverpod, працював над відкриттям медіа через Android ACTION_VIEW і реалізував перегляд розбіжностей під час синхронізації кошика та відновлення." }
+      },
+      "Caesar Puzzle Calendar": {
+        en: { kind: "Personal · Open source · Puzzle", description: "An open-source cross-platform puzzle for Android, iOS, web and desktop with interactive pieces, custom painting, undo/redo, local persistence and a DLX solver." },
+        uk: { kind: "Особистий · Open source · Puzzle", aliases: "У старих версіях: Caesar's Puzzle", description: "Кросплатформна головоломка з відкритим кодом для Android, iOS, Web і desktop: інтерактивні фігури, custom painting, undo/redo, локальне зберігання та DLX-розв’язувач." }
+      },
+      "flutter_flip_flap": {
+        en: { kind: "Open source · Flutter package", description: "A reusable Flutter package for flip/flap animations inspired by mechanical split-flap displays, with a public API, animation orchestration, configurable units and examples." },
+        uk: { kind: "Open source · Flutter package", description: "Багаторазовий Flutter-пакет для flip/flap-анімацій у стилі механічних split-flap дисплеїв: публічний API, orchestration, налаштовувані елементи та приклади." }
+      },
+      "exact_cover_dlx": {
+        en: { kind: "Open source · Dart package", description: "A Dart implementation of Donald Knuth's Dancing Links algorithm for fast search and enumeration of exact-cover solutions, used by Caesar Puzzle Calendar." },
+        uk: { kind: "Open source · Dart package", description: "Dart-пакет із реалізацією алгоритму Dancing Links Дональда Кнута для швидкого пошуку та переліку розв’язків exact-cover задач; використовується в Caesar Puzzle Calendar." }
+      }
+    };
+
+    const ui = {
+      en: {
+        title: "Peter Ombodi Projects", description: "Mobile, Android, Flutter and open-source project catalog of Peter Ombodi",
+        eyebrow: "Mobile engineering portfolio", lede: "Selected Android, Flutter and open-source projects by Peter Ombodi.",
+        jump: "View projects ↓", statProjects: "projects and product families", statYears: "years in commercial mobile development", statPlatforms: "core platforms",
+        search: "Search projects, descriptions or stack…", searchLabel: "Search projects", filterLabel: "Filter by type", profilesLabel: "Profiles", summaryLabel: "Summary", toolbarLabel: "Search and filters", languageLabel: "Language",
+        filters: { all: "All", commercial: "Commercial", personal: "Personal", opensource: "Open source" },
+        catalog: "Project catalog", empty: "No projects found. Try another search or reset the filter.",
+        open: "Open ↗", shown: "Shown", projects: ["project", "projects"],
+        extraLabels: { "Google Play: Kempinski Hotels": "Google Play: Kempinski Hotels", "Сайт продукта": "Product website", "Страница проекта": "Project page", "Интерактивный mockup": "Interactive mockup", "User guide": "User guide", "Bitbucket": "Bitbucket", "Предыдущий репозиторий": "Previous repository", "PR #32100 · memory leak fix": "PR #32100 · memory leak fix", "Web-версия": "Web version", "pub.dev": "pub.dev" }
+      },
+      uk: {
+        title: "Проєкти Петра Омбоді", description: "Каталог мобільних, Android, Flutter та open-source проєктів Петра Омбоді",
+        eyebrow: "Портфоліо mobile-розробника", lede: "Вибрані Android, Flutter та open-source проєкти Петра Омбоді.",
+        jump: "До каталогу ↓", statProjects: "проєктів і продуктових сімейств", statYears: "років комерційної mobile-розробки", statPlatforms: "основні платформи",
+        search: "Пошук за проєктами, описом або стеком…", searchLabel: "Пошук проєктів", filterLabel: "Фільтр за типом", profilesLabel: "Профілі", summaryLabel: "Підсумок", toolbarLabel: "Пошук і фільтри", languageLabel: "Мова",
+        filters: { all: "Усі", commercial: "Комерційні", personal: "Особисті", opensource: "Open source" },
+        catalog: "Каталог проєктів", empty: "Нічого не знайдено. Спробуйте інший запит або скиньте фільтр.",
+        open: "Відкрити ↗", shown: "Показано", projects: ["проєкт", "проєкти", "проєктів"],
+        extraLabels: { "Google Play: Kempinski Hotels": "Google Play: Kempinski Hotels", "Сайт продукта": "Сайт продукту", "Страница проекта": "Сторінка проєкту", "Интерактивный mockup": "Інтерактивний mockup", "User guide": "Посібник користувача", "Bitbucket": "Bitbucket", "Предыдущий репозиторий": "Попередній репозиторій", "PR #32100 · memory leak fix": "PR #32100 · memory leak fix", "Web-версия": "Web-версія", "pub.dev": "pub.dev" }
+      }
+    };
+
+    const linkLabels = { appstore: "App Store", play: "Google Play", github: "GitHub" };
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    const resultCount = document.getElementById("resultCount");
+    const empty = document.getElementById("empty");
+    let activeFilter = "all";
+    let currentLang = (() => {
+      try {
+        const saved = localStorage.getItem("portfolio-language");
+        if (saved === "en" || saved === "uk") return saved;
+      } catch (_) {}
+      return navigator.language?.toLowerCase().startsWith("uk") ? "uk" : "en";
+    })();
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[ch]);
+    }
+
+    function linkSlot(project, key) {
+      const url = project.links?.[key];
+      if (!url) return "";
+      const action = key === "play" && project.playSearch ? (currentLang === "uk" ? "Пошук застосунків ↗" : "Search apps ↗") : ui[currentLang].open;
+      return `<a class="link" href="${escapeHtml(url)}" target="_blank" rel="noreferrer"><span>${linkLabels[key]}</span><strong>${action}</strong></a>`;
+    }
+
+    function pluralProject(count) {
+      if (currentLang === "en") return count === 1 ? ui.en.projects[0] : ui.en.projects[1];
+      const mod10 = count % 10;
+      const mod100 = count % 100;
+      if (mod10 === 1 && mod100 !== 11) return ui.uk.projects[0];
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return ui.uk.projects[1];
+      return ui.uk.projects[2];
+    }
+
+    function applyUi() {
+      const text = ui[currentLang];
+      document.documentElement.lang = currentLang;
+      document.title = text.title;
+      document.querySelector('meta[name="description"]').content = text.description;
+      document.getElementById("eyebrow").textContent = text.eyebrow;
+      document.getElementById("pageTitle").textContent = text.title;
+      document.getElementById("lede").textContent = text.lede;
+      document.getElementById("jumpLink").textContent = text.jump;
+      document.getElementById("statProjects").textContent = text.statProjects;
+      document.getElementById("statYears").textContent = text.statYears;
+      document.getElementById("statPlatforms").textContent = text.statPlatforms;
+      document.querySelector(".profile-links").setAttribute("aria-label", text.profilesLabel);
+      document.querySelector(".stats").setAttribute("aria-label", text.summaryLabel);
+      document.querySelector(".toolbar").setAttribute("aria-label", text.toolbarLabel);
+      document.querySelector(".lang-switch").setAttribute("aria-label", text.languageLabel);
+      search.placeholder = text.search;
+      search.setAttribute("aria-label", text.searchLabel);
+      document.getElementById("filters").setAttribute("aria-label", text.filterLabel);
+      document.querySelectorAll(".filter").forEach(button => button.textContent = text.filters[button.dataset.filter]);
+      document.getElementById("catalogTitle").textContent = text.catalog;
+      empty.textContent = text.empty;
+      document.querySelectorAll(".lang-button").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.lang === currentLang)));
+    }
+
+    function render() {
+      const query = search.value.trim().toLocaleLowerCase(currentLang === "uk" ? "uk" : "en");
+      const visible = projects.filter(project => {
+        const typeMatch = activeFilter === "all" || project.type === activeFilter || project.categories?.includes(activeFilter);
+        const en = projectI18n[project.name]?.en || project;
+        const uk = projectI18n[project.name]?.uk || project;
+        const haystack = [project.name, en.aliases, en.kind, en.description, uk.aliases, uk.kind, uk.description, ...(project.stack || [])].filter(Boolean).join(" ").toLocaleLowerCase(currentLang === "uk" ? "uk" : "en");
+        return typeMatch && (!query || haystack.includes(query));
+      });
+
+      grid.innerHTML = visible.map((project, index) => {
+        const localized = projectI18n[project.name]?.[currentLang] || project;
+        const links = Object.keys(linkLabels).map(key => linkSlot(project, key)).join("");
+        return `
+        <article class="card">
+          <div class="card-top">
+            <span class="number">${String(index + 1).padStart(2, "0")}</span>
+            <span class="kind">${escapeHtml(localized.kind)}</span>
+          </div>
+          <h3>${escapeHtml(project.name)}</h3>
+          ${localized.aliases ? `<p class="aliases">${escapeHtml(localized.aliases)}</p>` : ""}
+          <p class="description">${escapeHtml(localized.description)}</p>
+          <div class="stack">${project.stack.map(item => `<span class="tag">${escapeHtml(item)}</span>`).join("")}</div>
+          ${links ? `<div class="links">${links}</div>` : ""}
+          ${project.extras?.length ? `<div class="extras">${project.extras.map(([label, url]) => `<a class="extra" href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(ui[currentLang].extraLabels[label] || label)} ↗</a>`).join("")}</div>` : ""}
+        </article>
+      `; }).join("");
+
+      resultCount.textContent = `${ui[currentLang].shown}: ${visible.length} ${pluralProject(visible.length)}`;
+      empty.style.display = visible.length ? "none" : "block";
+    }
+
+    document.getElementById("projectTotal").textContent = projects.length;
+    search.addEventListener("input", render);
+    document.getElementById("filters").addEventListener("click", event => {
+      const button = event.target.closest("button[data-filter]");
+      if (!button) return;
+      activeFilter = button.dataset.filter;
+      document.querySelectorAll(".filter").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+      render();
+    });
+    document.querySelectorAll(".lang-button").forEach(button => button.addEventListener("click", () => {
+      currentLang = button.dataset.lang;
+      try { localStorage.setItem("portfolio-language", currentLang); } catch (_) {}
+      applyUi();
+      render();
+    }));
+    applyUi();
+    render();
+  </script>
+</body>
+</html>
